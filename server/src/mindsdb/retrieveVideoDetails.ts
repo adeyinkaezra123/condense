@@ -1,17 +1,19 @@
-import MindsDB from "mindsdb-js-sdk";
+import MindsDB, { SqlQueryResult } from "mindsdb-js-sdk";
 
 export async function retrieveVideoDetails(videoId: string) {
   const videoDetailsQuery = `
-    SELECT * FROM mindsdb_youtube.videos
+    SELECT * FROM mindsdb_youtube.video
     WHERE video_id="${videoId}";
  `;
 
   try {
-    const response = await MindsDB.SQL.runQuery(videoDetailsQuery).then(() =>
-      console.log("Succesfully created a new MindsDB Youtube datastore")
-    );
-    return response
+    const response: SqlQueryResult = await MindsDB.SQL.runQuery(videoDetailsQuery);
+    console.log("Succesfully retrieved video details");
+    if (!response?.rows) {
+      throw new Error("Invalid response from MindsDB");
+    }
+    return response;
   } catch (error) {
-    console.error("Could not connect, check connection parameters");
+    console.error("Could not connect, check connection parameters", error);
   }
 }

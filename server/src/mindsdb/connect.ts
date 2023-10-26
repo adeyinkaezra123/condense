@@ -5,7 +5,7 @@ const mindsdb_pass = process.env.MINDSDB_PASSWORD;
 const mongoUsername = process.env.MONGO_USERNAME;
 const mongoPassword = process.env.MONGO_PASSWORD;
 const mongoHost = process.env.MONGO_HOST;
-const openApiKey = process.env.OPENAI_API_KEY;
+const ytApiKey = process.env.YOUTUBE_DATA_API_KEY;
 
 export async function connectMindsDB() {
   try {
@@ -21,7 +21,7 @@ export async function connectMindsDB() {
 
 export async function connectMindsToMongo() {
   const createMindsDbInstanceQuery = `
-    CREATE DATABASE mongo_datasource
+    CREATE DATABASE ytsummaries
     WITH ENGINE = 'mongodb',
     PARAMETERS = {
         "host": "${
@@ -32,15 +32,18 @@ export async function connectMindsToMongo() {
           "@" +
           mongoHost
         }",
-        "port": 27017,
+        "user": "${mongoUsername}",
         "password": "${mongoPassword}",
-        "database": "ytsummarize"
-    }
+        "database": "ytsummaries"
+    };
   `;
 
   try {
-    await MindsDB.SQL.runQuery(createMindsDbInstanceQuery).then(() =>
-      console.log("Succesfully created a MindsDB powered MongoDB instance")
+    await MindsDB.SQL.runQuery(createMindsDbInstanceQuery).then((data) =>
+      console.log(
+        "Succesfully created a MindsDB powered MongoDB instance",
+        data
+      )
     );
   } catch (error) {
     console.error("Could not connect, check connection parameters");
@@ -51,7 +54,7 @@ export async function createYoutubeDatasource() {
     CREATE DATABASE mindsdb_youtube
     WITH ENGINE = 'youtube',
     PARAMETERS = {
-      "youtube_api_token": "${openApiKey}"  
+      "youtube_api_token": "${ytApiKey}"  
     };
  `;
 
