@@ -24,6 +24,9 @@ export function retrieveVideoId(videoId: string) {
 }
 
 export const generateTranscript = async (videoUrl: string) => {
+  /**
+   * THIS FUNCTION WOULD BE REPLACED TO PROPERLY USE THE MINDSDB YOUTUBE HANDLER ONCE THIS PR HAS BEEN MERGED https://github.com/mindsdb/mindsdb/pull/8179
+   */
   const transcriptResponse = await YoutubeTranscript.fetchTranscript(videoUrl);
 
   if (!transcriptResponse) {
