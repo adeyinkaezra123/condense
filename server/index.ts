@@ -112,3 +112,5 @@ app.get("/summarize/*", async (req, res) => {
     }),
   ]);
 })();
+
+export default app
