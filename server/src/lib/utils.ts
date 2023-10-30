@@ -35,7 +35,7 @@ export const generateTranscript = async (videoUrl: string) => {
 
 export async function retryAfter(
   retries: number,
-  callback: () => any
+  callback: () => void
 ): Promise<ReturnType<typeof callback>> {
   while (retries) {
     try {
