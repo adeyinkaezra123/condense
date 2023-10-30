@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { config } from "dotenv";
 import bodyParser from "body-parser";
 import SummariesModel from "@/models/Summary";
@@ -25,11 +26,12 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 function setupApiConnection() {
   app.get("/", (req, res) => {
     console.log(req);
-    res.send("Hello world");
+    return res.send("Hello world");
   });
 
   app.listen(PORT);
@@ -45,11 +47,12 @@ app.get("/summarize/video", async (req, res) => {
     if (videoExistsInDb) {
       const { transcript, videoTitle } = videoExistsInDb;
       const summary = await generateSummary(transcript, videoTitle);
-      res.json({
+
+      // res.status(200).send("Transcripts generated succesfully");
+      return res.status(200).json({
         summary,
         time_savings: estimateTimeSavings(transcript, summary),
       });
-      return res.status(200).send("Transcripts generated succesfulle");
     } else {
       const raw_transcript = await retryAfter(3, () =>
         generateTranscript(video_id as string)
@@ -77,11 +80,13 @@ app.get("/summarize/video", async (req, res) => {
       });
 
       newVideo.save();
-      res.json({
+
+      // res.status(200).send("Transcripts fetched and saved succesfully");
+
+      return res.status(200).json({
         summary,
         time_savings: estimateTimeSavings(cleanTranscript, summary),
       });
-      return res.status(200).send("Transcripts fetched and saved succesfully");
     }
   } catch (error) {
     res.status(500).send(" Whoops!, something went wrong!");
@@ -92,7 +97,7 @@ app.get("/summarize/*", async (req, res) => {
   try {
     const query = (req.params as { [key: string]: string })[0];
     const video_id = await retrieveVideoId(query as string);
-    res.status(302).redirect(`/summarize/video?id=${video_id}`);
+    return res.status(302).redirect(`/summarize/video?id=${video_id}`);
   } catch (error) {
     res.status(404).send("Youtube video with the specified ID not found");
   }
