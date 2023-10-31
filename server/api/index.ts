@@ -1,3 +1,4 @@
-import app from "./index";
+import app from "../index";
+console.log('')
 
 export app
