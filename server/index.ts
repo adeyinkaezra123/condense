@@ -22,21 +22,28 @@ import { generateSummary } from "./mindsdb/generateSummary.js";
 
 config();
 const PORT = process.env.PORT;
-
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cors());
 
 function setupApiConnection() {
+  app.listen(PORT);
   app.get("/", (req, res) => {
     console.log(req);
     return res.send("Hello world");
   });
 
-  app.listen(PORT);
   console.log(`Listening on port ${PORT}`);
 }
+await Promise.all([
+  connectToMongoDB().then(() => setupApiConnection()),
+  connectMindsDB().then(() => {
+    connectMindsToMongo();
+    createYoutubeDatasource();
+  }),
+]);
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors());
 
 // API ENDPOINTS
 app.get("/summarize/video", async (req, res) => {
@@ -102,15 +109,5 @@ app.get("/summarize/*", async (req, res) => {
     res.status(404).send("Youtube video with the specified ID not found");
   }
 });
-(async () => {
-  await Promise.all([
-    setupApiConnection(),
-    connectToMongoDB().then(() => setupApiConnection()),
-    connectMindsDB().then(() => {
-      connectMindsToMongo();
-      createYoutubeDatasource();
-    }),
-  ]);
-})();
 
 export default app;
