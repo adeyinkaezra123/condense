@@ -105,7 +105,7 @@ app.get("/summarize/*", async (req, res) => {
 (async () => {
   await Promise.all([
     setupApiConnection(),
-    connectToMongoDB(),
+    connectToMongoDB().then(() => setupApiConnection()),
     connectMindsDB().then(() => {
       connectMindsToMongo();
       createYoutubeDatasource();
@@ -113,4 +113,4 @@ app.get("/summarize/*", async (req, res) => {
   ]);
 })();
 
-export default app
+export default app;
