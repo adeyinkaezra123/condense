@@ -27,7 +27,6 @@ const app = express();
 function setupApiConnection() {
   app.listen(PORT);
   app.get("/", (req, res) => {
-    console.log(req);
     return res.send("Hello world");
   });
 
