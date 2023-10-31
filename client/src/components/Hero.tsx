@@ -67,7 +67,7 @@ const Hero = () => {
             <span className="font-bold text-lg">condense</span>
           </div>
           <Button
-            className="flex gap-4 rounded-[999px] border max-w-[15%]"
+            className="flex gap-4 rounded-full border max-w-[15%]"
             icon={<Github />}
             onClick={() => window.open("https://github.com/adeyinkaezra123")}
             text="GitHub"

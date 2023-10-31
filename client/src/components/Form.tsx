@@ -68,7 +68,7 @@ export function Form({
           <div className="h-[2.35rem] w-full max-w-md animate-pulse rounded-md bg-gray-200" />
         )}
         <Button
-          className="peer-focus:border-black max-w-fit absolute inset-y-0 right-0  m-0 gap-2 h-full"
+          className="peer-focus:border-black rounded-md max-w-fit absolute inset-y-0 right-0  m-0 gap-2 h-full"
           icon={<EnterIcon className=" " />}
           text={buttonText}
           //   loading
